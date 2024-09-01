@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.service.product;
 
+import com.lutzarDemos.shoppingdemo.dto.ProductDto;
 import com.lutzarDemos.shoppingdemo.model.Product;
 import com.lutzarDemos.shoppingdemo.request.AddProductRequest;
 import com.lutzarDemos.shoppingdemo.request.ProductUpdateRequest;
@@ -26,4 +27,8 @@ public interface IProductService {
     // Find by brand and name
     List<Product> getProductByBrandAndName(String category, String name);
     Long countProductsByBrandAndName(String brand, String name);
+
+    List<ProductDto> getConvertedProducts(List<Product> products);
+
+    ProductDto convertToDto(Product product);
 }
