@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.service.product;
 
+import com.lutzarDemos.shoppingdemo.dto.ProductDto;
 import com.lutzarDemos.shoppingdemo.exceptions.ProductNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Category;
 import com.lutzarDemos.shoppingdemo.model.Product;
@@ -8,6 +9,7 @@ import com.lutzarDemos.shoppingdemo.repository.ProductRepository;
 import com.lutzarDemos.shoppingdemo.request.AddProductRequest;
 import com.lutzarDemos.shoppingdemo.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -113,5 +115,16 @@ public class ProductService implements IProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products) {
+        return products.stream().map(this::convertToDto).toList();
+    }
+
+    @Override
+    public ProductDto convertToDto(Product product) {
+        // needs completion
+        return null;
     }
 }
