@@ -12,7 +12,7 @@ public interface IProductService {
     Product getProductById(Long id);
 
     void deleteProductById(Long id);
-    Product updatedProductById(ProductUpdateRequest product, Long productId);
+    Product updatedProduct(ProductUpdateRequest product, Long productId);
 
     // List all products
     List<Product> getAllProducts();
@@ -21,11 +21,11 @@ public interface IProductService {
     // Find by the name of the brand
     List<Product> getProductsByBrand(String brand);
     // Find by category and brand
-    List<Product> getProductByCategoryAndBrand(String category, String brand);
+    List<Product> getProductsByCategoryAndBrand(String category, String brand);
     // Find by name
-    List<Product> getProductByName(String name);
+    List<Product> getProductsByName(String name);
     // Find by brand and name
-    List<Product> getProductByBrandAndName(String category, String name);
+    List<Product> getProductsByBrandAndName(String category, String name);
     Long countProductsByBrandAndName(String brand, String name);
 
     List<ProductDto> getConvertedProducts(List<Product> products);
