@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.controller;
 
+import com.lutzarDemos.shoppingdemo.dto.ProductDto;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Product;
 import com.lutzarDemos.shoppingdemo.request.AddProductRequest;
@@ -24,20 +25,24 @@ public class ProductController {
     private final IProductService productService;
 
     // Handles HTTP request to get all products
-    // returns a list of products
+    // returns a list of product data transfer objects with params
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-        return ResponseEntity.ok(new ApiResponse("Success!", products));
+        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
+        return ResponseEntity.ok(new ApiResponse("Success!", convertedProducts));
     }
 
     // Handles HTTP request to get a product by its ID
-    // returns the requested product with params
+    // returns the requested product data transfer object with params
     @GetMapping("product/{productId}/product")
     public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
         try {
             Product product = productService.getProductById(productId);
-            return  ResponseEntity.ok(new ApiResponse("success", product));
+            ProductDto productDto = productService.convertToDto(product);
+
+            return  ResponseEntity.ok(new ApiResponse("success", productDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
@@ -80,75 +85,85 @@ public class ProductController {
     }
 
     // Handles HTTP request to find all products by requested brand and name
-    // returns a list of products that match the request with params for each product
+    // returns a list of product data transfer objects that match the request with params
     @GetMapping("/products/by/brand-and-name")
     public ResponseEntity<ApiResponse> getProductByBrandAndName(@RequestParam String brandName, @RequestParam String productName) {
         try {
             List<Product> products = productService.getProductsByBrandAndName(brandName, productName);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("success", products));
+            return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
     // Handles HTTP request to find all products by requested brand and category
-    // returns a list of products that match the request with params for each product
+    // returns a list of product data transfer objects that match the request with params
     @GetMapping("/products/by/category-and-brand")
     public ResponseEntity<ApiResponse> getProductByCategoryAndBrand(@RequestParam String category, @RequestParam String brand){
         try {
             List<Product> products = productService.getProductsByCategoryAndBrand(category, brand);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("success", products));
+            return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", e.getMessage()));
         }
     }
 
     // Handles HTTP request to find all products by requested name
-    // returns a list of products that match the request with params for each product
+    // returns a list of product data transfer objects that match the request with params
     @GetMapping("/products/{name}/products")
     public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name){
         try {
             List<Product> products = productService.getProductsByName(name);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("success", products));
+            return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", e.getMessage()));
         }
     }
 
     // Handles HTTP request to find all products by requested brand
-    // returns a list of products that match the request with params for each product
+    // returns a list of product data transfer objects that match the request with params
     @GetMapping("/product/by-brand")
     public ResponseEntity<ApiResponse> findProductByBrand(@RequestParam String brand) {
         try {
             List<Product> products = productService.getProductsByBrand(brand);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("success", products));
+            return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
         }
     }
 
     // Handles HTTP request to find all products by requested category
-    // returns a list of products that match the request with params for each product
+    // returns a list of product data transfer objects that match the request with params
     @GetMapping("/product/{category}/all/products")
     public ResponseEntity<ApiResponse> findProductByCategory(@PathVariable String category) {
         try {
             List<Product> products = productService.getProductsByCategory(category);
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
             }
-            return  ResponseEntity.ok(new ApiResponse("success", products));
+            return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
         } catch (Exception e) {
             return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
         }
