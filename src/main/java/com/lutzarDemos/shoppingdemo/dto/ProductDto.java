@@ -7,6 +7,8 @@ import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
 
+// Data transfer object for a product
+// *NOTE* REQUIRED FOR FUTURE EXPANSION, CURRENTLY NOT IN USE
 @Data
 public class ProductDto {
     private Long id;
