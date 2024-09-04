@@ -1,15 +1,19 @@
 package com.lutzarDemos.shoppingdemo.service.product;
 
+import com.lutzarDemos.shoppingdemo.dto.ImageDto;
 import com.lutzarDemos.shoppingdemo.dto.ProductDto;
 import com.lutzarDemos.shoppingdemo.exceptions.ProductNotFoundException;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Category;
+import com.lutzarDemos.shoppingdemo.model.Image;
 import com.lutzarDemos.shoppingdemo.model.Product;
 import com.lutzarDemos.shoppingdemo.repository.CategoryRepository;
+import com.lutzarDemos.shoppingdemo.repository.ImageRepository;
 import com.lutzarDemos.shoppingdemo.repository.ProductRepository;
 import com.lutzarDemos.shoppingdemo.request.AddProductRequest;
 import com.lutzarDemos.shoppingdemo.request.ProductUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +25,8 @@ import java.util.Optional;
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
+    private final ImageRepository imageRepository;
 
     // Takes in a AddProductRequest with params to add to the DB
     // saves new product in the DB
@@ -137,16 +143,27 @@ public class ProductService implements IProductService{
         return productRepository.countByBrandAndName(brand, name);
     }
 
-    // *NOTE* NOT IN USE, FOR FUTURE IMPLEMENTATIONS
+    // Takes in a list of products
+    // returns a list of products that have been converted to product dtos
     @Override
     public List<ProductDto> getConvertedProducts(List<Product> products) {
         return products.stream().map(this::convertToDto).toList();
     }
 
-    // *NOTE* NOT IN USE, FOR FUTURE IMPLEMENTATIONS
+    // Takes in an existing product entity
+    // maps a the product to a product dto
+    // creates a list of the images linked to the product
+    // maps and creates a list of image dtos from image list
+    // updates product dto with list of image dtos
+    // returns converted product dto with image dtos
     @Override
     public ProductDto convertToDto(Product product) {
-        // needs completion
-        return null;
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return productDto;
     }
 }
