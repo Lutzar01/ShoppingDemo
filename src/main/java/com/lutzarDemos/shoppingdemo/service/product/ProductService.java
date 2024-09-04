@@ -15,15 +15,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+// Contains override methods relating to the product entity for business logic and application functionality
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
+    // Takes in a AddProductRequest with params to add to the DB
+    // saves new product in the DB
     @Override
     public Product addProduct(AddProductRequest request) {
-        // Check if the categoryis foundin the DB
+        // Check if the category is found in the DB
         // If yes, set it as the new product category
         // If no, then save it as a new category
         // Then set it as the new product category
@@ -48,12 +51,14 @@ public class ProductService implements IProductService{
         );
     }
 
+    // Takes in a product ID and searches for it in the DB
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(()->new ResourceNotFoundException("Product not found!"));
     }
 
+    // Takes in a product ID and removes it from the DB
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id)
@@ -61,6 +66,8 @@ public class ProductService implements IProductService{
                         ()->{throw new ResourceNotFoundException("Product not found!");});
     }
 
+    // Takes in a ProductUpdateRequest with params and an existing product ID in the DB
+    // replaces existing product with new params
     @Override
     public Product updatedProduct(ProductUpdateRequest request, Long productId) {
         return productRepository.findById(productId)
@@ -82,46 +89,61 @@ public class ProductService implements IProductService{
         return existingProduct;
     }
 
+    // Finds all products in the DB
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
+    // Takes in a category name linked to existing products
+    // searches for all products with the category name as a param in the DB
     @Override
     public List<Product> getProductsByCategory(String category) {
         return productRepository.findByCategoryName(category);
     }
 
+    // Takes in a brand name linked to existing products
+    // searches for all products with the brand name as a param in the DB
     @Override
     public List<Product> getProductsByBrand(String brand) {
         return productRepository.findByBrand(brand);
     }
 
+    // Takes in a category name and brand name linked to existing products
+    // searches for all products with the category and brand name as params in the DB
     @Override
     public List<Product> getProductsByCategoryAndBrand(String category, String brand) {
         return productRepository.findByCategoryNameAndBrand(category, brand);
     }
 
+    // Takes in a product name linked to existing products
+    // searches for all products with the product name as a param in the DB
     @Override
     public List<Product> getProductsByName(String name) {
         return productRepository.findByName(name);
     }
 
+    // Takes in a brand name and product name linked to existing products
+    // searches for all products with the brand name and product name as params in the DB
     @Override
     public List<Product> getProductsByBrandAndName(String brand, String name) {
         return productRepository.findByBrandAndName(brand, name);
     }
 
+    // Takes in a brand name and product name linked to existing products
+    // counts for all products with the brand name and product name as params in the DB
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
     }
 
+    // *NOTE* NOT IN USE, FOR FUTURE IMPLEMENTATIONS
     @Override
     public List<ProductDto> getConvertedProducts(List<Product> products) {
         return products.stream().map(this::convertToDto).toList();
     }
 
+    // *NOTE* NOT IN USE, FOR FUTURE IMPLEMENTATIONS
     @Override
     public ProductDto convertToDto(Product product) {
         // needs completion
