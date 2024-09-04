@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
+// Handles adding new data objects for products
 @Data
 public class AddProductRequest {
     private Long id;
