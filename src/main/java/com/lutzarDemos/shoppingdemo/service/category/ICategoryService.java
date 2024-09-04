@@ -4,6 +4,7 @@ import com.lutzarDemos.shoppingdemo.model.Category;
 
 import java.util.List;
 
+// Contains base methods relating to the category entity for business logic and application functionality
 public interface ICategoryService {
     Category getCategoryById(Long id);
     Category getCategoryByName(String name);

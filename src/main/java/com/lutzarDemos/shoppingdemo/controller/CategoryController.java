@@ -13,13 +13,16 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
+// Handles HTTP requests and returns a response for categories
+// otherwise returns HTTP status error
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/categories")
 public class CategoryController {
     private final ICategoryService categoryService;
 
-    // Handles find all categories
+    // Handles HTTP request to find all categories that exist in the DB
+    // returns a list of all categories that exist in the DB
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllCategories() {
         try {
@@ -30,7 +33,9 @@ public class CategoryController {
         }
     }
 
-    // Handles adding new category
+    // Handles HTTP request to add a new category to the DB
+    // returns the category that matches the request with params
+    // *Note* ONLY WORKS WHEN PAIRED WITH A NEW PRODUCT
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addCategory(@RequestParam Category name) {
         try {
@@ -41,7 +46,8 @@ public class CategoryController {
         }
     }
 
-    // Handles finding category by id
+    // Handles HTTP request to find a category by ID
+    // returns the category that matches the request with params
     @GetMapping("/category/{id}/category")
     public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id) {
         try {
@@ -52,7 +58,8 @@ public class CategoryController {
         }
     }
 
-    // Handles finding category by name
+    // Handles HTTP request to find a category by name
+    // returns the category that matches the request with params
     @GetMapping("/category/{name}/category")
     public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String name) {
         try {
@@ -63,7 +70,8 @@ public class CategoryController {
         }
     }
 
-    // Handles updating existing category
+    // Handles HTTP request to update an existing category in the DB
+    // returns the category that matches the request with new params
     @PutMapping("/category/{id}/update")
     public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody Category category) {
         try {
@@ -74,7 +82,8 @@ public class CategoryController {
         }
     }
 
-    // Handles deleting existing category
+    // Handles HTTP request to delete an existing category in the DB
+    // returns a null value confirming the request was successful
     @DeleteMapping("/category/{id}/delete")
     public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id) {
         try {

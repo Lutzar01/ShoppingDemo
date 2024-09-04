@@ -9,6 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.List;
 
+// Model for Product
 @Getter
 @Setter
 @NoArgsConstructor

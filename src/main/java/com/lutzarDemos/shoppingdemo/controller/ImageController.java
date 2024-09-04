@@ -21,13 +21,16 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+// Handles HTTP requests and returns a response for images
+// otherwise returns HTTP status error
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/images")
 public class ImageController {
     private final IImageService imageService;
 
-    // Handles upload requests
+    // Handles HTTP request to upload and save one or more images to a product
+    // returns a list of images that reflect the request with params
     @PostMapping("/upload")
     public ResponseEntity<ApiResponse> saveImages(@RequestParam List<MultipartFile> files, @RequestParam Long productId) {
         try {
@@ -40,7 +43,8 @@ public class ImageController {
         }
     }
 
-    // Handles download requests
+    // Handles HTTP request to download an existing image of a product
+    // returns the requested image
     @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
         Image image = imageService.getImageById(imageId);
@@ -50,7 +54,8 @@ public class ImageController {
                 .body(resource);
     }
 
-    // Handles update requests to images
+    // Handles HTTP requests to update an existing image of a product
+    // returns the updated image with params
     @PutMapping("/image/{imageId}/update")
     public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file) {
         try {
@@ -65,7 +70,8 @@ public class ImageController {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update Failed!", HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    // Handles delete requests to images
+    // Handles HTTP request to delete an existing image of a product
+    // returns a null value confirming the request was successful
     @DeleteMapping("/image/{imageId}/delete")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId) {
         try {

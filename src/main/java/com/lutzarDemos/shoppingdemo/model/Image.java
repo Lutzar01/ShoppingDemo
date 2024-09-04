@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.sql.Blob;
 
+// Model for Image
 @Getter
 @Setter
 @AllArgsConstructor

@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+// Contains base methods relating to the image entity for business logic and application functionality
 public interface IImageService {
     Image getImageById(Long id);
     void deleteImageById(Long id);
