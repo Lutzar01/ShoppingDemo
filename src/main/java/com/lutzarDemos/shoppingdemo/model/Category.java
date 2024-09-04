@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.List;
 
+// Model for category
 @Getter
 @Setter
 @NoArgsConstructor
