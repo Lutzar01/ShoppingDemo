@@ -16,18 +16,21 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Contains override methods relating to the image entity for business logic and application functionality
 @Service
 @RequiredArgsConstructor
 public class ImageService implements IImageService{
     private final ImageRepository imageRepository;
     private final IProductService productService;
 
+    // Takes in an image ID and searches for it in the DB
     @Override
     public Image getImageById(Long id) {
         return imageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Image not found: " + id));
     }
 
+    // Takes in an image ID and removes it from the DB
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id)
@@ -36,6 +39,8 @@ public class ImageService implements IImageService{
                 });
     }
 
+    // Takes in one or more image (as images) and a product ID
+    // saves them in the DB and links them to the product
     @Override
     public List<ImageDto> saveImages(List<MultipartFile> files, Long productId) {
         Product product = productService.getProductById(productId);
@@ -69,6 +74,8 @@ public class ImageService implements IImageService{
         return savedImageDto;
     }
 
+    // Takes in a file (as image) and an existing image ID
+    // updates the image file in the DB
     @Override
     public void updateImage(MultipartFile file, Long imageId) {
         Image image = getImageById(imageId);
