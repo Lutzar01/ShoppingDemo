@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// Contains override methods  relating to the category entity for business logic and application functionality
+// Contains override methods relating to the category entity for business logic and application functionality
 @Service
 @RequiredArgsConstructor
 public class CategoryService implements ICategoryService {
