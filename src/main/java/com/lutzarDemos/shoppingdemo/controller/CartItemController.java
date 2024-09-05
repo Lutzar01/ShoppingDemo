@@ -34,7 +34,7 @@ public class CartItemController {
 
     // Handles HTTP request to remove an existing Product from an existing Cart
     // returns the response "Item Removed!"
-    @DeleteMapping("/cart/{cartId}/product/{productId}/remove")
+    @DeleteMapping("/cart/{cartId}/item/{productId}/remove")
     public ResponseEntity<ApiResponse> removeItemFromCart(@PathVariable Long cartId,
                                                           @PathVariable Long productId) {
         try {
@@ -47,8 +47,8 @@ public class CartItemController {
     }
 
     // Handles HTTP request to update an existing Product quantity in an existing Cart
-    // returns the response "Update Item Success!" 
-    @PutMapping("/cart/{cartId}/product/{productId}/update")
+    // returns the response "Update Item Success!"
+    @PutMapping("/cart/{cartId}/item/{productId}/update")
     public ResponseEntity<ApiResponse> updateItemQuantity(@PathVariable Long cartId,
                                                           @PathVariable Long productId,
                                                           @RequestParam Integer quantity) {
