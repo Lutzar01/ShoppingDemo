@@ -22,7 +22,7 @@ public class CartItemController {
     // Handles HTTP request to add a CartItem
     // Returns response "Add Item Success"
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
