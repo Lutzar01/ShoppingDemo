@@ -4,6 +4,7 @@ import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Cart;
 import com.lutzarDemos.shoppingdemo.repository.CartItemRepository;
 import com.lutzarDemos.shoppingdemo.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class CartService implements ICartService {
     // deletes all cart items in repository
     // clears cart items
     // deletes cart
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = getCart(id);
