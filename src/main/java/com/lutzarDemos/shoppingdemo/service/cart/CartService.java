@@ -4,10 +4,12 @@ import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Cart;
 import com.lutzarDemos.shoppingdemo.repository.CartItemRepository;
 import com.lutzarDemos.shoppingdemo.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 // Contains override methods relating to the cart entity for business logic and application functionality
 @Service
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     // Takes in cart ID, updates total amount, saves cart
     // throws ResourceNotFoundException if ID does not exist
@@ -31,6 +34,7 @@ public class CartService implements ICartService {
     // deletes all cart items in repository
     // clears cart items
     // deletes cart
+    @Transactional
     @Override
     public void clearCart(Long id) {
         Cart cart = getCart(id);
@@ -45,5 +49,15 @@ public class CartService implements ICartService {
     public BigDecimal getTotalPrice(Long id) {
         Cart cart = getCart(id);
         return cart.getTotalAmount();
+    }
+
+    // *TEMPORARY*
+    // Returns new generated cart for testing until a User Entity has been created
+    @Override
+    public Long initializeNewCart() {
+        Cart newCart = new Cart();
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        newCart.setId(newCartId);
+        return cartRepository.save(newCart).getId();
     }
 }
