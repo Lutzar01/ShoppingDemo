@@ -15,7 +15,7 @@ import java.util.Set;
  * Model to identify what values exist in an ORDER
  *
  * @author      Lutzar
- * @version     1.1, 2024/09/07
+ * @version     1.2, 2024/09/07
 */
 @Getter
 @Setter
@@ -31,4 +31,7 @@ public class Order {
     private OrderStatus orderStatus;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
