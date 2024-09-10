@@ -11,7 +11,13 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.concurrent.atomic.AtomicLong;
 
-// Contains override methods relating to the cart entity for business logic and application functionality
+/**
+ * Contains override methods relating to the cart entity
+ *      for business logic and application functionality
+ *
+ * @author      Lutzar
+ * @version     1.2, 2024/09/07
+ */
 @Service
 @RequiredArgsConstructor
 public class CartService implements ICartService {
@@ -59,5 +65,14 @@ public class CartService implements ICartService {
         Long newCartId = cartIdGenerator.incrementAndGet();
         newCart.setId(newCartId);
         return cartRepository.save(newCart).getId();
+    }
+
+    /**
+     * @param userId    the USER who owns the CART
+     * @return          the USER's CART
+     */
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
     }
 }
