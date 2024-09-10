@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // Manages cart entity and saves data to the MySQL DB
 public interface CartRepository extends JpaRepository<Cart, Long> {
+    Cart findByUserId(Long userId);
 }
