@@ -15,12 +15,13 @@ import java.util.Set;
  * Model to identify what values exist in an ORDER
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/07
+ * @version     1.3, 2024/09/10
 */
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
