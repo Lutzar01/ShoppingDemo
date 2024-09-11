@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.service.user;
 
+import com.lutzarDemos.shoppingdemo.dto.UserDto;
 import com.lutzarDemos.shoppingdemo.exceptions.AlreadyExistsException;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.User;
@@ -7,6 +8,7 @@ import com.lutzarDemos.shoppingdemo.repository.UserRepository;
 import com.lutzarDemos.shoppingdemo.request.CreateUserRequest;
 import com.lutzarDemos.shoppingdemo.request.UpdateUserRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,12 +18,13 @@ import java.util.Optional;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.1, 2024/09/09
+ * @version     1.2, 2024/09/10
  */
 @Service
 @RequiredArgsConstructor
 public class UserService implements IUserService{
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     /**
      * Finds an existing USER in the USER REPOSITORY
@@ -83,5 +86,16 @@ public class UserService implements IUserService{
                 .ifPresentOrElse(userRepository :: delete, () -> {
                     throw new ResourceNotFoundException("User not found!");
                 });
+    }
+
+    /**
+     * Converts a USER to a USER DTO
+     *
+     * @param user  USER being converted to a USER DTO
+     * @return      A new USER DTO
+     */
+    @Override
+    public UserDto convertUserToDto(User user) {
+        return modelMapper.map(user, UserDto.class);
     }
 }
