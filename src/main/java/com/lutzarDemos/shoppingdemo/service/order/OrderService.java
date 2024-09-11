@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.service.order;
 
+import com.lutzarDemos.shoppingdemo.dto.OrderDto;
 import com.lutzarDemos.shoppingdemo.enums.OrderStatus;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Cart;
@@ -11,6 +12,7 @@ import com.lutzarDemos.shoppingdemo.repository.ProductRepository;
 import com.lutzarDemos.shoppingdemo.service.cart.CartService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,7 +25,7 @@ import java.util.List;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.1, 2024/09/07
+ * @version     1.2, 2024/09/10
  */
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class OrderService implements IOrderService{
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
     /**
      * Finds CART, creates new ORDER from CART, creates list of ORDER ITEMS
@@ -110,20 +113,35 @@ public class OrderService implements IOrderService{
      * @return          The ORDER requested
      */
     @Override
-    public Order getOrder(Long orderId) {
+    public OrderDto getOrder(Long orderId) {
         return orderRepository.findById(orderId)
+                .map(this :: convertToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Order Not Found!"));
     }
 
     /**
      * Find's USER's ORDERs by the ID
+     *      converts them to ORDER DTOs
      *
      * @param userId    the USER
-     * @return          List of ORDERs saved/placed
+     * @return          List of ORDER DTOs that exist
      */
     @Override
-    public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public List<OrderDto> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders
+                .stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
+    /**
+     * Helper method that converts an ORDER to an ORDER DTO
+     *
+     * @param order     ORDER being converted to an ORDER DTO
+     * @return          Converted ORDER DTO
+     */
+    private OrderDto convertToDto(Order order) {
+        return modelMapper.map(order, OrderDto.class);
+    }
 }

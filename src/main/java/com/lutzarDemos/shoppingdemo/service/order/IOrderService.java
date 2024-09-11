@@ -1,5 +1,6 @@
 package com.lutzarDemos.shoppingdemo.service.order;
 
+import com.lutzarDemos.shoppingdemo.dto.OrderDto;
 import com.lutzarDemos.shoppingdemo.model.Order;
 
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.List;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.1, 2024/09/07
+ * @version     1.2, 2024/09/10
  */
 public interface IOrderService {
     Order placeOrder(Long userId);
-    Order getOrder(Long orderId);
-    List<Order> getUserOrders(Long userId);
+    OrderDto getOrder(Long orderId);
+    List<OrderDto> getUserOrders(Long userId);
 }
