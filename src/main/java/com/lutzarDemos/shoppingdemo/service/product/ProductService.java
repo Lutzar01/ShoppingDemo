@@ -2,6 +2,7 @@ package com.lutzarDemos.shoppingdemo.service.product;
 
 import com.lutzarDemos.shoppingdemo.dto.ImageDto;
 import com.lutzarDemos.shoppingdemo.dto.ProductDto;
+import com.lutzarDemos.shoppingdemo.exceptions.AlreadyExistsException;
 import com.lutzarDemos.shoppingdemo.exceptions.ProductNotFoundException;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Category;
@@ -19,7 +20,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-// Contains override methods relating to the product entity for business logic and application functionality
+/**
+ * Contains override methods relating to the PRODUCT entity
+ *      for business logic and application functionality
+ *
+ * @author      Lutzar
+ * @version     1.3, 2024/09/11
+ */
 @Service
 @RequiredArgsConstructor
 public class ProductService implements IProductService{
@@ -28,16 +35,26 @@ public class ProductService implements IProductService{
     private final ModelMapper modelMapper;
     private final ImageRepository imageRepository;
 
-    // Takes in a AddProductRequest with params to add to the DB
-    // saves new product in the DB
+    /**
+     * Saves a new PRODUCT to the DB
+     *      1) Check to see if the PRODUCT already exists
+     *          If true, throws AlreadyExistsException
+     *      2) Check to see if the CATEGORY already exists
+     *          If yes, set it as the new PRODUCT CATEGORY
+     *          If no, create new CATEGORY and save
+     *
+     * @param request   The class containing the params of the PRODUCT being added
+     * @return          Saved PRODUCT
+     */
     @Override
     public Product addProduct(AddProductRequest request) {
-        // Check if the category is found in the DB
-        // If yes, set it as the new product category
-        // If no, then save it as a new category
-        // Then set it as the new product category
-
-        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
+        if (productExists(request.getName(), request.getBrand())) {
+            throw new AlreadyExistsException
+                    (request.getBrand() + " " + request.getName() + " Already Exists! Try Updating The PRODUCT instead!");
+        }
+        
+        Category category = Optional
+                .ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(()-> {
                     Category newCategory = new Category(request.getCategory().getName());
                     return categoryRepository.save(newCategory);
@@ -46,6 +63,23 @@ public class ProductService implements IProductService{
         return productRepository.save(createProduct(request, category));
     }
 
+    /**
+     * Helper method to see if the PRODUCT already exists in the DB
+     *
+     * @param name      Name of the PRODUCT
+     * @param brand     Brand of the PRODUCT
+     */
+    private boolean productExists(String name, String brand) {
+        return productRepository.existByNameAndBrand(name, brand);
+    }
+
+    /**
+     * Helper method to create a new PRODUCT
+     *
+     * @param request   The class containing the params of the PRODUCT being created
+     * @param category  The CATEGORY of the PRODUCT being created
+     * @return          New PRODUCT with params
+     */
     private Product createProduct(AddProductRequest request, Category category) {
         return new Product(
                 request.getName(),
@@ -76,13 +110,22 @@ public class ProductService implements IProductService{
     // replaces existing product with new params
     @Override
     public Product updatedProduct(ProductUpdateRequest request, Long productId) {
-        return productRepository.findById(productId)
+        return productRepository
+                .findById(productId)
                 .map(existingProduct -> updateExistingProduct(existingProduct, request))
                 .map(productRepository :: save)
                 .orElseThrow(()->new ResourceNotFoundException("Product not found!"));
 
     }
 
+    /**
+     * Helper method to update an existing PRODUCT
+     *      any update overrides existing PRODUCT param
+     *
+     * @param existingProduct   PRODUCT being updated in the DB
+     * @param request           The class containing the PRODUCT params being updated
+     * @return                  Updated PRODUCT with params
+     */
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
         existingProduct.setName(request.getName());
         existingProduct.setBrand(request.getBrand());
