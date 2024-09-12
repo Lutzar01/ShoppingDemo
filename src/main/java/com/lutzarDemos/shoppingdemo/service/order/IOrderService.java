@@ -10,10 +10,11 @@ import java.util.List;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/10
+ * @version     1.3, 2024/09/10
  */
 public interface IOrderService {
     Order placeOrder(Long userId);
     OrderDto getOrder(Long orderId);
     List<OrderDto> getUserOrders(Long userId);
+    OrderDto convertToDto(Order order);
 }
