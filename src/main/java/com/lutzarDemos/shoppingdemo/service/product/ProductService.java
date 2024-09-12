@@ -52,7 +52,7 @@ public class ProductService implements IProductService{
             throw new AlreadyExistsException
                     (request.getBrand() + " " + request.getName() + " Already Exists! Try Updating The PRODUCT instead!");
         }
-        
+
         Category category = Optional
                 .ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(()-> {
