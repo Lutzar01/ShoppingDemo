@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  *      otherwise returns HTTP status error
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/10
+ * @version     1.3, 2024/09/10
  */
 @RequiredArgsConstructor
 @RestController
@@ -28,18 +28,19 @@ public class OrderController {
     private final IOrderService orderService;
 
     /**
-     * Handles HTTP request to create a new ORDER in the ORDER REPOSITORY
+     * Handles HTTP request to create a new ORDER DTO in the ORDER REPOSITORY
      *
      * @param userId    The ID of the USER creating the request
-     * @return          If success, ok response with ORDER
+     * @return          If success, ok response with ORDER DTO
      *                  If failure, INTERNAL_SERVER_ERROR response with message
      */
     @PostMapping("/order")
     public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId){
         try {
             Order order = orderService.placeOrder(userId);
+            OrderDto orderDto = orderService.convertToDto(order);
             return ResponseEntity
-                    .ok(new ApiResponse("New Order Success!", order));
+                    .ok(new ApiResponse("New Order Success!", orderDto));
         } catch (Exception e) {
             return ResponseEntity
                     .status(INTERNAL_SERVER_ERROR)
