@@ -7,4 +7,6 @@ SQL Database using Spring Framework
 
 Use the ApiResponses in the controller classes via Postman to GET, POST, PUT, DELETE. 
 
-You will need to have a SQL schema running and connected via the applications.properties and update the information accordingly to add any new products, images, or categories to the database. 
+You will need to have a SQL schema running and connected via the applications.properties and update the information accordingly to modify any new data to the database. 
+
+Open the EER Diagram in MySQL to view
