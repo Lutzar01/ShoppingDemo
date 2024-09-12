@@ -1,6 +1,7 @@
 package com.lutzarDemos.shoppingdemo.controller;
 
 import com.lutzarDemos.shoppingdemo.dto.ProductDto;
+import com.lutzarDemos.shoppingdemo.exceptions.AlreadyExistsException;
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Product;
 import com.lutzarDemos.shoppingdemo.request.AddProductRequest;
@@ -13,11 +14,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
-// Handles HTTP requests and returns a response for products
-// otherwise returns HTTP status error
+/**
+ * Handles HTTP requests and returns a response for PRODUCTs
+ *      otherwise returns HTTP status error
+ *
+ * @author      Lutzar
+ * @version     1.3, 2024/09/11
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -47,16 +52,21 @@ public class ProductController {
         }
     }
 
-    // Handles HTTP request to add a new product
-    // returns the product that was added with params
+    /**
+     * Handles HTTP request to add a new PRODUCT
+     *
+     * @param product   The request body containing the params of the PRODUCT being added
+     * @return          If success, ok response with the new PRODUCT
+     *                  If failure, CONFLICT response with message
+     */
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         try {
             Product theProduct = productService.addProduct(product);
             return ResponseEntity.ok(new ApiResponse("Add product success!", theProduct));
 
-        } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+        } catch (AlreadyExistsException e) {
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
         }
     }
 

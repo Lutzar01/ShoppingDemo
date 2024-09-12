@@ -25,7 +25,7 @@ import java.util.List;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/10
+ * @version     1.3, 2024/09/10
  */
 @Service
 @RequiredArgsConstructor
@@ -136,12 +136,13 @@ public class OrderService implements IOrderService{
     }
 
     /**
-     * Helper method that converts an ORDER to an ORDER DTO
+     * Converts an ORDER to an ORDER DTO
      *
      * @param order     ORDER being converted to an ORDER DTO
      * @return          Converted ORDER DTO
      */
-    private OrderDto convertToDto(Order order) {
+    @Override
+    public OrderDto convertToDto(Order order) {
         return modelMapper.map(order, OrderDto.class);
     }
 }

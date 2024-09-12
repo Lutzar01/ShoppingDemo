@@ -1,35 +1,50 @@
 package com.lutzarDemos.shoppingdemo.controller;
 
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
+import com.lutzarDemos.shoppingdemo.model.Cart;
+import com.lutzarDemos.shoppingdemo.model.User;
 import com.lutzarDemos.shoppingdemo.response.ApiResponse;
 import com.lutzarDemos.shoppingdemo.service.cart.ICartItemService;
 import com.lutzarDemos.shoppingdemo.service.cart.ICartService;
+import com.lutzarDemos.shoppingdemo.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-// Handles HTTP requests and returns a response for carts
-// otherwise returns HTTP status error
+/**
+ * Handles HTTP requests and returns a response for a CART
+ *      otherwise returns HTTP status error
+ *
+ * @author      Lutzar
+ * @version     1.2, 2024/09/10
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/cartItems")
 public class CartItemController {
     private final ICartItemService cartItemService;
     private final ICartService cartService;
+    private final IUserService userService;
 
-    // Handles HTTP request to add a CartItem
-    // Returns response "Add Item Success"
+    /**
+     * *TEMPORARY*
+     * Handles HTTP request to add a new CART ITEM
+     *
+     * @param productId     The ID of the PRODUCT being added to the CART
+     * @param quantity      The amount of the PRODUCT being added to the CART
+     * @return              If success, ok response with message
+     *                      If failure, NOT_FOUND response with message
+     */
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId,
+    public ResponseEntity<ApiResponse> addItemToCart(
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            if (cartId == null) {
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
+            User user = userService.getUserById(1L);
+            Cart cart = cartService.getCartByUserId(user.getId());
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success!", null));
 
         } catch (ResourceNotFoundException e) {
