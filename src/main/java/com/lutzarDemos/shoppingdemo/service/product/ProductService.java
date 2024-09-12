@@ -48,11 +48,12 @@ public class ProductService implements IProductService{
      */
     @Override
     public Product addProduct(AddProductRequest request) {
+        /*
         if (productExists(request.getName(), request.getBrand())) {
             throw new AlreadyExistsException
                     (request.getBrand() + " " + request.getName() + " Already Exists! Try Updating The PRODUCT instead!");
         }
-
+        */
         Category category = Optional
                 .ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(()-> {
@@ -69,10 +70,11 @@ public class ProductService implements IProductService{
      * @param name      Name of the PRODUCT
      * @param brand     Brand of the PRODUCT
      */
+    /*
     private boolean productExists(String name, String brand) {
         return productRepository.existByNameAndBrand(name, brand);
     }
-
+    */
     /**
      * Helper method to create a new PRODUCT
      *
