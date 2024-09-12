@@ -2,6 +2,7 @@ package com.lutzarDemos.shoppingdemo.service.cart;
 
 import com.lutzarDemos.shoppingdemo.exceptions.ResourceNotFoundException;
 import com.lutzarDemos.shoppingdemo.model.Cart;
+import com.lutzarDemos.shoppingdemo.model.User;
 import com.lutzarDemos.shoppingdemo.repository.CartItemRepository;
 import com.lutzarDemos.shoppingdemo.repository.CartRepository;
 import jakarta.transaction.Transactional;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -16,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/07
+ * @version     1.3, 2024/09/10
  */
 @Service
 @RequiredArgsConstructor
@@ -57,14 +59,21 @@ public class CartService implements ICartService {
         return cart.getTotalAmount();
     }
 
-    // *TEMPORARY*
-    // Returns new generated cart for testing until a User Entity has been created
+    /**
+     * Creates new CART for a USER if one does not exist
+     *
+     * @param user  The USER who owns the CART
+     * @return      A new CART for the USER and saves to the CART REPOSITORY
+     */
     @Override
-    public Long initializeNewCart() {
-        Cart newCart = new Cart();
-        Long newCartId = cartIdGenerator.incrementAndGet();
-        newCart.setId(newCartId);
-        return cartRepository.save(newCart).getId();
+    public Cart initializeNewCart(User user) {
+        return Optional
+                .ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepository.save(cart);
+                });
     }
 
     /**
