@@ -1,4 +1,4 @@
-package com.lutzarDemos.shoppingdemo.configs;
+package com.lutzarDemos.shoppingdemo.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
