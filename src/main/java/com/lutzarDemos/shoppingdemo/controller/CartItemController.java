@@ -7,18 +7,20 @@ import com.lutzarDemos.shoppingdemo.response.ApiResponse;
 import com.lutzarDemos.shoppingdemo.service.cart.ICartItemService;
 import com.lutzarDemos.shoppingdemo.service.cart.ICartService;
 import com.lutzarDemos.shoppingdemo.service.user.IUserService;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 /**
  * Handles HTTP requests and returns a response for a CART
  *      otherwise returns HTTP status error
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/10
+ * @version     1.3, 2024/09/13
  */
 @RequiredArgsConstructor
 @RestController
@@ -29,26 +31,28 @@ public class CartItemController {
     private final IUserService userService;
 
     /**
-     * *TEMPORARY*
      * Handles HTTP request to add a new CART ITEM
      *
      * @param productId     The ID of the PRODUCT being added to the CART
      * @param quantity      The amount of the PRODUCT being added to the CART
      * @return              If success, ok response with message
-     *                      If failure, NOT_FOUND response with message
+     *                      If failure to add item, NOT_FOUND response with message
+     *                      If failure to get authenticated USER, UNAUTHORIZED response with message
      */
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(
                                                      @RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
-            User user = userService.getUserById(1L);
+            User user = userService.getAuthenticatedUser();
             Cart cart = cartService.getCartByUserId(user.getId());
             cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success!", null));
 
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch (JwtException e) {
+            return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         }
     }
 

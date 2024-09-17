@@ -10,7 +10,7 @@ import com.lutzarDemos.shoppingdemo.request.UpdateUserRequest;
  *      for business logic and application functionality
  *
  * @author      Lutzar
- * @version     1.2, 2024/09/10
+ * @version     1.3, 2024/09/13
  */
 public interface IUserService {
     User getUserById(Long userId);
@@ -18,4 +18,5 @@ public interface IUserService {
     User updateUser(UpdateUserRequest request, Long userId);
     void deleteUser(Long userId);
     UserDto convertUserToDto(User user);
+    User getAuthenticatedUser();
 }
