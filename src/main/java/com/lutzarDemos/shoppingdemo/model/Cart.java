@@ -7,10 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
-// Model to identify what cart items exist in a cart (ie. products)
-// and their total amount
+/**
+ * Model to identify what cart items exist in a cart (meaning products)
+ *      and their total amount
+ *
+ * @author      Lutzar
+ * @version     1.2, 2024/09/17
+ */
 @Getter
 @Setter
 @AllArgsConstructor
@@ -25,7 +31,7 @@ public class Cart {
 
     // When a cart is deleted, all cart items should be deleted as well
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> items;
+    private Set<CartItem> items = new HashSet<>();
 
     @OneToOne
     @JoinColumn(name = "user_id")
