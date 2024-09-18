@@ -10,6 +10,7 @@ import com.lutzarDemos.shoppingdemo.response.ApiResponse;
 import com.lutzarDemos.shoppingdemo.service.product.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,10 @@ import static org.springframework.http.HttpStatus.*;
  * Handles HTTP requests and returns a response for PRODUCTs
  *      otherwise returns HTTP status error
  *
+ * Uses method level security
+ *
  * @author      Lutzar
- * @version     1.3, 2024/09/11
+ * @version     1.4, 2024/09/16
  */
 @RequiredArgsConstructor
 @RestController
@@ -59,6 +62,7 @@ public class ProductController {
      * @return          If success, ok response with the new PRODUCT
      *                  If failure, CONFLICT response with message
      */
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
         try {
@@ -72,6 +76,7 @@ public class ProductController {
 
     // Handles HTTP request to update an existing product
     // returns the updated product with params
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/product/{productId}/update")
     public  ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
         try {
@@ -85,6 +90,7 @@ public class ProductController {
 
     // Handles HTTP request to delete an existing product
     // returns the product ID that was deleted
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/product/{productId}/delete")
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
         try {
