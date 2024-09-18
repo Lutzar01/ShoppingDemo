@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,11 +21,12 @@ import java.io.IOException;
  * Used for filtering authentication tokens from requests
  *
  *  * @author      Lutzar
- *  * @version     1.1, 2024/09/13
+ *  * @version     1.2, 2024/09/17
  */
+@RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private JwtUtils jwtUtils;
-    private ShopUserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
+    private final ShopUserDetailsService userDetailsService;
 
     /**
      * Checks if jwt exists and is valid
@@ -58,6 +60,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             response.getWriter().write(e.getMessage() + " : Invalid or Expired Token, Please Log In and Try Again!");
             return;
         } catch (Exception e) {
+            System.out.println("NULLLLL");
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(e.getMessage());
             return;
