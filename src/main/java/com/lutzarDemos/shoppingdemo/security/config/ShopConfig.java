@@ -2,6 +2,7 @@ package com.lutzarDemos.shoppingdemo.security.config;
 
 import com.lutzarDemos.shoppingdemo.security.jwt.AuthTokenFilter;
 import com.lutzarDemos.shoppingdemo.security.jwt.JwtAuthEntryPoint;
+import com.lutzarDemos.shoppingdemo.security.jwt.JwtUtils;
 import com.lutzarDemos.shoppingdemo.security.user.ShopUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -25,15 +27,18 @@ import java.util.List;
  * Shop configuration class...
  *
  *  * @author      Lutzar
- *  * @version     1.2, 2024/09/13
+ *  * @version     1.3, 2024/09/17
  */
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class ShopConfig {
     private final ShopUserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;
     private final JwtAuthEntryPoint authEntryPoint;
-    private static final List<String> SECURED_URLS = List.of("");
+    private static final List<String> SECURED_URLS =
+            List.of("/api/v1/carts/**", "/api/v1/cartItems/**");
 
     @Bean
     public ModelMapper modelMapper() {
