@@ -2,7 +2,7 @@ package com.lutzarDemos.shoppingdemo.controller;
 
 import com.lutzarDemos.shoppingdemo.request.LoginRequest;
 import com.lutzarDemos.shoppingdemo.response.ApiResponse;
-import com.lutzarDemos.shoppingdemo.response.JwtReponse;
+import com.lutzarDemos.shoppingdemo.response.JwtResponse;
 import com.lutzarDemos.shoppingdemo.security.jwt.JwtUtils;
 import com.lutzarDemos.shoppingdemo.security.user.ShopUserDetails;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  *      otherwise returns HTTP status error
  *
  * @author      Lutzar
- * @version     1.1, 2024/09/16
+ * @version     1.2, 2024/09/17
  */
 @RequiredArgsConstructor
 @RestController
@@ -49,7 +49,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateTokenForUser(authentication);
             ShopUserDetails userDetails = (ShopUserDetails) authentication.getPrincipal();
-            JwtReponse jwtReponse = new JwtReponse(userDetails.getId(), jwt);
+            JwtResponse jwtReponse = new JwtResponse(userDetails.getId(), jwt);
             return ResponseEntity
                     .ok(new ApiResponse("Login Successful!", jwtReponse));
         } catch (AuthenticationException e) {
