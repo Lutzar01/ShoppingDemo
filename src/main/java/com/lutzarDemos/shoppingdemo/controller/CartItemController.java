@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
  *      otherwise returns HTTP status error
  *
  * @author      Lutzar
- * @version     1.3, 2024/09/13
+ * @version     1.4, 2024/09/17
  */
 @RequiredArgsConstructor
 @RestController
@@ -45,7 +45,12 @@ public class CartItemController {
                                                      @RequestParam Integer quantity) {
         try {
             User user = userService.getAuthenticatedUser();
-            Cart cart = cartService.getCartByUserId(user.getId());
+            Cart cart = user.getCart();
+            if (cart == null){
+                cart = cartService.initializeNewCart(user);
+            } else {
+                cart = cartService.getCartByUserId(user.getId());
+            }
             cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success!", null));
 
