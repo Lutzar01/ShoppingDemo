@@ -17,7 +17,7 @@ import java.util.Map;
  * Used to confirm a request has been authenticated
  *
  *  * @author      Lutzar
- *  * @version     1.1, 2024/09/13
+ *  * @version     1.2, 2024/09/17
  */
 @Component
 public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
@@ -42,7 +42,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
         final Map<String, Object> body = new HashMap<>();
         body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
         body.put("error", "Unauthorized");
-        body.put("message", authException.getMessage());
+        body.put("message", "Please log in to your account and try again!");
         body.put("path", request.getServletPath());
 
         final ObjectMapper mapper = new ObjectMapper();

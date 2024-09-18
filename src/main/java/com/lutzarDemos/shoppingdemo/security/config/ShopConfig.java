@@ -27,7 +27,7 @@ import java.util.List;
  * Shop configuration class...
  *
  *  * @author      Lutzar
- *  * @version     1.3, 2024/09/17
+ *  * @version     1.4, 2024/09/17
  */
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -52,7 +52,7 @@ public class ShopConfig {
 
     @Bean
     public AuthTokenFilter authTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
     @Bean
