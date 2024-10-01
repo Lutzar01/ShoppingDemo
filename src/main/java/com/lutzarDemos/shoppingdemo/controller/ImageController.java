@@ -21,8 +21,14 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-// Handles HTTP requests and returns a response for images
-// otherwise returns HTTP status error
+//
+/**
+ * Handles HTTP requests and returns a response for IMAGEs
+ *      otherwise returns HTTP status error
+ *
+ * @author      Lutzar
+ * @version     1.2, 2024/09/30
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/images")
@@ -43,15 +49,31 @@ public class ImageController {
         }
     }
 
-    // Handles HTTP request to download an existing image of a product
-    // returns the requested image
+    /**
+     * Handles HTTP request to download an existing IMAGE of a PRODUCT
+     *     returns the requested image
+     *
+     * @param imageId           Identity of the IMAGE
+     * @return                  If success, ok response with IMAGE resource
+     *                          If failure, NOT_FOUND status
+     * @throws SQLException     SQL Exception with message
+     */
     @GetMapping("/image/download/{imageId}")
     public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
-        Image image = imageService.getImageById(imageId);
-        ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(image.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
-                .body(resource);
+        try {
+            Image image = imageService.getImageById(imageId);
+            ByteArrayResource resource = new ByteArrayResource(image.getImage().getBytes(1, (int) image.getImage().length()));
+            return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.parseMediaType(image.getFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
+                    .body(resource);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity
+                    .status(NOT_FOUND).body(null);
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage());
+        }
     }
 
     // Handles HTTP requests to update an existing image of a product
