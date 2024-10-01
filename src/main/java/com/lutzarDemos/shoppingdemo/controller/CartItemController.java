@@ -20,7 +20,7 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
  *      otherwise returns HTTP status error
  *
  * @author      Lutzar
- * @version     1.4, 2024/09/17
+ * @version     1.5, 2024/09/30
  */
 @RequiredArgsConstructor
 @RestController
@@ -40,8 +40,7 @@ public class CartItemController {
      *                      If failure to get authenticated USER, UNAUTHORIZED response with message
      */
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(
-                                                     @RequestParam Long productId,
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long productId,
                                                      @RequestParam Integer quantity) {
         try {
             User user = userService.getAuthenticatedUser();
@@ -52,12 +51,16 @@ public class CartItemController {
                 cart = cartService.getCartByUserId(user.getId());
             }
             cartItemService.addItemToCart(cart.getId(), productId, quantity);
-            return ResponseEntity.ok(new ApiResponse("Add Item Success!", null));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Add Item Success!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
         } catch (JwtException e) {
-            return ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(UNAUTHORIZED)
+                    .body(new ApiResponse(e.getMessage(), null));
         }
     }
 
@@ -68,10 +71,12 @@ public class CartItemController {
                                                           @PathVariable Long productId) {
         try {
             cartItemService.removeItemFromCart(cartId, productId);
-            return ResponseEntity.ok(new ApiResponse("Item Removed!", null));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Item Removed!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
         }
     }
 
@@ -83,10 +88,12 @@ public class CartItemController {
                                                           @RequestParam Integer quantity) {
         try {
             cartItemService.updateItemQuantity(cartId, productId, quantity);
-            return ResponseEntity.ok(new ApiResponse("Update Item Success!", null));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Update Item Success!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
         }
     }
 }

@@ -12,8 +12,14 @@ import java.math.BigDecimal;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-// Handles HTTP requests and returns a response for carts
-// otherwise returns HTTP status error
+//
+/**
+ * Handles HTTP requests and returns a response for CARTs
+ *      otherwise returns HTTP status error
+ *
+ * @author      Lutzar
+ * @version     1.2, 2024/09/30
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/carts")
@@ -26,10 +32,11 @@ public class CartController {
     public ResponseEntity<ApiResponse> getCart(@PathVariable Long cartId) {
         try {
             Cart cart = cartService.getCart(cartId);
-            return ResponseEntity.ok(new ApiResponse("Success!", cart));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Success!", cart));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
@@ -39,10 +46,12 @@ public class CartController {
     public ResponseEntity<ApiResponse> clearCart(@PathVariable Long cartId) {
         try {
             cartService.clearCart(cartId);
-            return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", cartId));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Clear Cart Success!", cartId));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
         }
     }
 
@@ -52,10 +61,12 @@ public class CartController {
     public ResponseEntity<ApiResponse> getTotalAmount(@PathVariable Long cartId) {
         try {
             BigDecimal totalPrice = cartService.getTotalPrice(cartId);
-            return ResponseEntity.ok(new ApiResponse("Total Price!", totalPrice));
-
+            return ResponseEntity
+                    .ok(new ApiResponse("Total Price!", totalPrice));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity
+                    .status(NOT_FOUND)
+                    .body(new ApiResponse(e.getMessage(), null));
         }
     }
 }
