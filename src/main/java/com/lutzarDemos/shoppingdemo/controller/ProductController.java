@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.*;
  * Uses method level security
  *
  * @author      Lutzar
- * @version     1.4, 2024/09/16
+ * @version     1.5, 2024/09/30
  */
 @RequiredArgsConstructor
 @RestController
@@ -32,13 +32,24 @@ import static org.springframework.http.HttpStatus.*;
 public class ProductController {
     private final IProductService productService;
 
-    // Handles HTTP request to get all products
-    // returns a list of product data transfer objects with params
+    /**
+     * Handles HTTP request to get all products
+     *
+     * @return      If success, ok response with list of PRODUCT DTO with params
+     *              If failure, INTERNAL_SERVER_ERROR with message
+     */
     @GetMapping("/all")
     public ResponseEntity<ApiResponse> getAllProducts() {
-        List<Product> products = productService.getAllProducts();
-        List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
-        return ResponseEntity.ok(new ApiResponse("Success!", convertedProducts));
+        try {
+            List<Product> products = productService.getAllProducts();
+            List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+            return ResponseEntity
+                    .ok(new ApiResponse("Success!", convertedProducts));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(INTERNAL_SERVER_ERROR)
+                    .body(new ApiResponse(e.getMessage(), null));
+        }
     }
 
     // Handles HTTP request to get a product by its ID
